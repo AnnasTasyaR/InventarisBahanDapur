@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx/8"
+            fx:controller="controller.InventoryController"
+            prefWidth="600" prefHeight="640"
+            style="-fx-background-color: #000066;">
+
+    <VBox alignment="TOP_CENTER" spacing="20" layoutX="20" layoutY="20" prefWidth="560">
+        <padding>
+            <Insets top="20" left="20" right="20" bottom="20"/>
+        </padding>
+
+        <!-- Header -->
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <children>
+                <Label fx:id="usernameLabel"
+                       style="-fx-font-size: 16px; -fx-font-weight: bold;"
+                       textFill="white" text="Halo, user"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <ComboBox fx:id="languageComboBox" prefWidth="120"/>
+            </children>
+        </HBox>
+
+        <!-- Title -->
+        <Label fx:id="titleLabel"
+               text="Inventaris Bahan Dapur"
+               style="-fx-font-weight: bold; -fx-font-size: 20px;"
+               textFill="white"/>
+
+        <!-- Tabel Inventaris -->
+        <TableView fx:id="bahanTable" prefHeight="300" prefWidth="560">
+            <columns>
+                <TableColumn fx:id="namaColumn" text="Nama" prefWidth="100"/>
+                <TableColumn fx:id="jumlahColumn" text="Jumlah" prefWidth="75"/>
+                <TableColumn fx:id="satuanColumn" text="Satuan" prefWidth="75"/>
+                <TableColumn fx:id="tglColumn" text="Kadaluarsa" prefWidth="125"/>
+                <TableColumn fx:id="kategoriColumn" text="Kategori" prefWidth="100"/>
+                <TableColumn fx:id="actionColumn" text="Aksi" prefWidth="160"/>
+            </columns>
+        </TableView>
+
+        <!-- Form Input -->
+        <HBox spacing="10">
+            <children>
+                <TextField fx:id="namaField" promptText="Nama Bahan" prefWidth="100"/>
+                <TextField fx:id="jumlahField" promptText="Jumlah" prefWidth="60"/>
+                <TextField fx:id="satuanField" promptText="Satuan" prefWidth="80"/>
+                <DatePicker fx:id="tglKadaluarsaPicker" prefWidth="140"/>
+                <TextField fx:id="kategoriField" promptText="Kategori" prefWidth="100"/>
+            </children>
+        </HBox>
+
+        <!-- Tombol Aksi -->
+        <HBox spacing="15" alignment="CENTER">
+            <children>
+                <Button fx:id="tambahButton" text="Tambah" onAction="#tambahBahan"
+                        style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                <Button fx:id="historyButton" text="Riwayat" onAction="#openRiwayat"
+                        style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                <Button fx:id="logoutButton" text="Keluar" onAction="#logout"
+                        style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold;"/>
+            </children>
+        </HBox>
+    </VBox>
+</AnchorPane>

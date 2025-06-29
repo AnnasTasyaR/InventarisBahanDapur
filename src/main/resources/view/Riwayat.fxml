@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.RiwayatController"
+            prefWidth="500" prefHeight="400"
+            style="-fx-background-color: #000066;">
+    <children>
+
+        <Label fx:id="usernameLabel"
+               layoutX="20" layoutY="20"
+               textFill="white"
+               style="-fx-font-size: 18px; -fx-font-weight: bold;" />
+
+        <ListView fx:id="riwayatListView"
+                  layoutX="20" layoutY="60"
+                  prefWidth="460" prefHeight="280"
+                  style="-fx-control-inner-background: white; -fx-font-size: 13px;" />
+
+        <Button fx:id="kembaliButton"
+                layoutX="370" layoutY="350"
+                prefWidth="110"
+                text="%back"
+                style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold;" />
+    </children>
+</AnchorPane>

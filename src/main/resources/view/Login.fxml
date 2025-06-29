@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.LoginController"
+            prefWidth="400" prefHeight="400"
+            style="-fx-background-color: #000066;">
+
+    <children>
+        <!-- Language Selector -->
+        <HBox layoutX="200.0" layoutY="20.0" alignment="CENTER_RIGHT" spacing="5">
+            <children>
+                <Label fx:id="languageLabel" text="%language" textFill="white" style="-fx-font-weight: bold;" />
+                <ComboBox fx:id="languageComboBox" prefWidth="150"/>
+            </children>
+        </HBox>
+
+        <!-- Login Form -->
+        <VBox layoutX="50.0" layoutY="80.0" spacing="15">
+            <children>
+                <Label fx:id="titleLabel" text="%login.title" textFill="white"
+                       style="-fx-font-size: 20px; -fx-font-weight: bold;" />
+
+                <Label fx:id="usernameLabel" text="%username" textFill="white" style="-fx-font-weight: bold;" />
+                <TextField fx:id="usernameField" prefWidth="300"/>
+
+                <Label fx:id="passwordLabel" text="%password" textFill="white" style="-fx-font-weight: bold;" />
+                <PasswordField fx:id="passwordField" prefWidth="300"/>
+
+                <Button fx:id="loginButton" text="%login" onAction="#handleLogin"
+                        prefWidth="300"
+                        style="-fx-background-color: #00FF00; -fx-text-fill: white; -fx-font-weight: bold;" />
+
+                <Button fx:id="signupButton" text="%signup" onAction="#goToSignup"
+                        prefWidth="300"
+                        style="-fx-background-color: white; -fx-text-fill: #000066; -fx-font-weight: bold;" />
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
