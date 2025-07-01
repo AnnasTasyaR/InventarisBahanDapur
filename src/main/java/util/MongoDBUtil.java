@@ -6,7 +6,7 @@ import com.mongodb.client.MongoDatabase;
 
 public class MongoDBUtil {
     private static final String URI = "mongodb://localhost:27017";
-    private static final String DB_NAME = "kalkulatorDB";
+    private static final String DB_NAME = "inventaris_dapur";
 
     private static MongoClient client;
 

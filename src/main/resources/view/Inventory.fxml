@@ -6,7 +6,7 @@
 <AnchorPane xmlns:fx="http://javafx.com/fxml" xmlns="http://javafx.com/javafx/8"
             fx:controller="controller.InventoryController"
             prefWidth="600" prefHeight="640"
-            style="-fx-background-color: #000066;">
+            style="-fx-background-color: #ffc0cb;">
 
     <VBox alignment="TOP_CENTER" spacing="20" layoutX="20" layoutY="20" prefWidth="560">
         <padding>
@@ -42,6 +42,14 @@
             </columns>
         </TableView>
 
+        <!-- 🔁 Tombol Backup dan Restore -->
+        <HBox spacing="10" alignment="CENTER">
+            <Button fx:id="backupBtn" text="Backup ke File"
+                    style="-fx-background-color: #006400; -fx-text-fill: white; -fx-font-weight: bold;"/>
+            <Button fx:id="restoreBtn" text="Restore dari File"
+                    style="-fx-background-color: #8B0000; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        </HBox>
+
         <!-- Form Input -->
         <HBox spacing="10">
             <children>
@@ -54,15 +62,15 @@
         </HBox>
 
         <!-- Tombol Aksi -->
-        <HBox spacing="15" alignment="CENTER">
+        <VBox spacing="10" alignment="CENTER">
             <children>
                 <Button fx:id="tambahButton" text="Tambah" onAction="#tambahBahan"
-                        style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        style="-fx-background-color: #800000; -fx-text-fill: white; -fx-font-weight: bold;"/>
                 <Button fx:id="historyButton" text="Riwayat" onAction="#openRiwayat"
-                        style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        style="-fx-background-color: #800000; -fx-text-fill: white; -fx-font-weight: bold;"/>
                 <Button fx:id="logoutButton" text="Keluar" onAction="#logout"
-                        style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        style="-fx-background-color: #800000; -fx-text-fill: white; -fx-font-weight: bold;"/>
             </children>
-        </HBox>
+        </VBox>
     </VBox>
 </AnchorPane>

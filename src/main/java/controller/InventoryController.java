@@ -14,14 +14,14 @@ import model.BahanDapur;
 import model.Riwayat;
 import util.Session;
 
-
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
+import java.io.*;
+
 
 public class InventoryController {
 
@@ -38,6 +38,8 @@ public class InventoryController {
     @FXML private Label usernameLabel;
     @FXML private ComboBox<String> languageComboBox;
     @FXML private Label titleLabel;
+    @FXML private Button backupBtn;
+    @FXML private Button restoreBtn;
 
     private final InventoryDAO dao = new InventoryDAO();
     private final RiwayatDAO riwayatDAO = new RiwayatDAO();
@@ -67,6 +69,17 @@ public class InventoryController {
 
         loadData();
         addButtonToTable();
+
+        backupBtn.setOnAction(e -> {
+            dao.backupKeFile("backup_bahan.ser");
+            showAlert(Alert.AlertType.INFORMATION, "Backup berhasil disimpan ke file.");
+        });
+
+        restoreBtn.setOnAction(e -> {
+            List<BahanDapur> dariFile = dao.restoreDariFile("backup_bahan.ser");
+            bahanTable.setItems(FXCollections.observableArrayList(dariFile));
+            showAlert(Alert.AlertType.INFORMATION, "Data berhasil dipulihkan dari file.");
+        });
     }
 
     private void refreshTexts() {
@@ -116,13 +129,13 @@ public class InventoryController {
             int jumlah = Integer.parseInt(jumlahStr);
             String username = Session.getCurrentUsername();
 
-            Object existingId = namaField.getUserData(); // cek apakah ini edit
+            Object existingId = namaField.getUserData();
             if (existingId != null) {
                 BahanDapur updated = new BahanDapur(existingId.toString(), nama, jumlah, satuan, tgl, kategori);
                 dao.updateBahan(updated);
                 riwayatDAO.simpan(new Riwayat(username, "Edit bahan: " + nama, LocalDateTime.now()));
                 showAlert(Alert.AlertType.INFORMATION, "Data berhasil diperbarui.");
-                namaField.setUserData(null); // reset status edit
+                namaField.setUserData(null);
             } else {
                 String id = UUID.randomUUID().toString();
                 BahanDapur bahan = new BahanDapur(id, nama, jumlah, satuan, tgl, kategori);
@@ -148,52 +161,51 @@ public class InventoryController {
     }
 
     private void addButtonToTable() {
-    actionColumn.setCellFactory(param -> new TableCell<BahanDapur, Void>() {
-        private final Button editBtn = new Button("Edit");
-        private final Button deleteBtn = new Button("Hapus");
+        actionColumn.setCellFactory(param -> new TableCell<BahanDapur, Void>() {
+            private final Button editBtn = new Button("Edit");
+            private final Button deleteBtn = new Button("Hapus");
 
-        {
-            editBtn.setOnAction(event -> {
-                BahanDapur selected = getTableView().getItems().get(getIndex());
-                namaField.setText(selected.getNama());
-                jumlahField.setText(String.valueOf(selected.getJumlah()));
-                satuanField.setText(selected.getSatuan());
-                kategoriField.setText(selected.getKategori());
-                tglKadaluarsaPicker.setValue(selected.getTanggalKadaluarsa());
-                namaField.setUserData(selected.getId());
-            });
-
-            deleteBtn.setOnAction(event -> {
-                BahanDapur selected = getTableView().getItems().get(getIndex());
-                Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, 
-                        "Hapus bahan " + selected.getNama() + "?",
-                        ButtonType.YES, ButtonType.NO);
-                confirm.showAndWait().ifPresent(response -> {
-                    if (response == ButtonType.YES) {
-                        dao.hapusBahan(selected.getId());
-                        riwayatDAO.simpan(new Riwayat(
-                                Session.getCurrentUsername(), 
-                                "Hapus bahan: " + selected.getNama(), 
-                                LocalDateTime.now()));
-                        loadData();
-                    }
+            {
+                editBtn.setOnAction(event -> {
+                    BahanDapur selected = getTableView().getItems().get(getIndex());
+                    namaField.setText(selected.getNama());
+                    jumlahField.setText(String.valueOf(selected.getJumlah()));
+                    satuanField.setText(selected.getSatuan());
+                    kategoriField.setText(selected.getKategori());
+                    tglKadaluarsaPicker.setValue(selected.getTanggalKadaluarsa());
+                    namaField.setUserData(selected.getId());
                 });
-            });
-        }
 
-        @Override
-        protected void updateItem(Void item, boolean empty) {
-            super.updateItem(item, empty);
-            if (empty) {
-                setGraphic(null);
-            } else {
-                HBox box = new HBox(5, editBtn, deleteBtn);
-                setGraphic(box);
+                deleteBtn.setOnAction(event -> {
+                    BahanDapur selected = getTableView().getItems().get(getIndex());
+                    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                            "Hapus bahan " + selected.getNama() + "?",
+                            ButtonType.YES, ButtonType.NO);
+                    confirm.showAndWait().ifPresent(response -> {
+                        if (response == ButtonType.YES) {
+                            dao.hapusBahan(selected.getId());
+                            riwayatDAO.simpan(new Riwayat(
+                                    Session.getCurrentUsername(),
+                                    "Hapus bahan: " + selected.getNama(),
+                                    LocalDateTime.now()));
+                            loadData();
+                        }
+                    });
+                });
             }
-        }
-    });
-}
 
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    HBox box = new HBox(5, editBtn, deleteBtn);
+                    setGraphic(box);
+                }
+            }
+        });
+    }
 
     @FXML
     private void openRiwayat() {

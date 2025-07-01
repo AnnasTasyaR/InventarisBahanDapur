@@ -1,12 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.pmkom</groupId>
-    <artifactId>KalkulatorBBIdeal</artifactId>
+
+    <!-- Ganti informasi proyek -->
+    <groupId>com.umkm</groupId> <!-- misalnya untuk branding UMKM -->
+    <artifactId>InventarisBahanDapur</artifactId>
     <version>1.0</version>
+    <name>Inventaris Bahan Dapur</name> <!-- Nama yang akan tampil di log build -->
 
     <dependencies>
         <!-- MongoDB Driver -->
@@ -15,9 +18,8 @@
             <artifactId>mongodb-driver-sync</artifactId>
             <version>4.11.1</version>
         </dependency>
-        <!-- JavaFX (jika diperlukan karena JDK 8 sudah bundling) -->
+        <!-- Tambahkan dependency JavaFX jika dibutuhkan -->
     </dependencies>
-    
 
     <build>
         <resources>
@@ -36,5 +38,4 @@
             </plugin>
         </plugins>
     </build>
-    <name>InventarisBahanDapur</name>
 </project>

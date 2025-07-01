@@ -7,9 +7,9 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controller.RiwayatController"
             prefWidth="500" prefHeight="400"
-            style="-fx-background-color: #000066;">
-    <children>
+            style="-fx-background-color: #ffc0cb;"> <!-- merah muda -->
 
+    <children>
         <Label fx:id="usernameLabel"
                layoutX="20" layoutY="20"
                textFill="white"
@@ -20,10 +20,11 @@
                   prefWidth="460" prefHeight="280"
                   style="-fx-control-inner-background: white; -fx-font-size: 13px;" />
 
+        <!-- Tombol Kembali -->
         <Button fx:id="kembaliButton"
-                layoutX="370" layoutY="350"
-                prefWidth="110"
                 text="%back"
-                style="-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-weight: bold;" />
+                prefWidth="110"
+                style="-fx-background-color: #800000; -fx-text-fill: white; -fx-font-weight: bold;"
+                AnchorPane.rightAnchor="20" AnchorPane.bottomAnchor="20"/>
     </children>
 </AnchorPane>

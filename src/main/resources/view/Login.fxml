@@ -7,7 +7,7 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controller.LoginController"
             prefWidth="400" prefHeight="400"
-            style="-fx-background-color: #000066;">
+            style="-fx-background-color: #ffc0cb;"> <!-- merah muda -->
 
     <children>
         <!-- Language Selector -->
@@ -29,14 +29,19 @@
 
                 <Label fx:id="passwordLabel" text="%password" textFill="white" style="-fx-font-weight: bold;" />
                 <PasswordField fx:id="passwordField" prefWidth="300"/>
+            </children>
+        </VBox>
 
+        <!-- Tombol Login & Signup -->
+        <VBox layoutX="80.0" layoutY="300.0" spacing="10" prefWidth="240" alignment="CENTER_RIGHT">
+            <children>
                 <Button fx:id="loginButton" text="%login" onAction="#handleLogin"
-                        prefWidth="300"
-                        style="-fx-background-color: #00FF00; -fx-text-fill: white; -fx-font-weight: bold;" />
+                        prefWidth="240"
+                        style="-fx-background-color: #800000; -fx-text-fill: white; -fx-font-weight: bold;" />
 
                 <Button fx:id="signupButton" text="%signup" onAction="#goToSignup"
-                        prefWidth="300"
-                        style="-fx-background-color: white; -fx-text-fill: #000066; -fx-font-weight: bold;" />
+                        prefWidth="240"
+                        style="-fx-background-color: #800000; -fx-text-fill: white; -fx-font-weight: bold;" />
             </children>
         </VBox>
     </children>

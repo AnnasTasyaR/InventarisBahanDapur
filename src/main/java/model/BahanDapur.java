@@ -1,8 +1,11 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class BahanDapur {
+public class BahanDapur implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String id;
     private String nama;
     private int jumlah;

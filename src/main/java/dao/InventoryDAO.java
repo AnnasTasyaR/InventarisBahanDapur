@@ -5,6 +5,7 @@ import model.BahanDapur;
 import org.bson.Document;
 import util.MongoDBUtil;
 
+import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,5 +64,26 @@ public class InventoryDAO {
                 .append("kategori", bahan.getKategori()));
 
         collection.updateOne(eq("id", bahan.getId()), updated);
+    }
+
+    // === Tambahan untuk Backup dan Restore ===
+    public void backupKeFile(String filePath) {
+        List<BahanDapur> list = getSemuaBahan();
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
+            oos.writeObject(list);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<BahanDapur> restoreDariFile(String filePath) {
+        List<BahanDapur> list = new ArrayList<>();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
+            list = (List<BahanDapur>) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }
