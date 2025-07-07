@@ -2,7 +2,9 @@ package controller;
 
 import dao.InventoryDAO;
 import dao.RiwayatDAO;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -20,8 +22,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
-import java.io.*;
-
 
 public class InventoryController {
 
@@ -71,14 +71,45 @@ public class InventoryController {
         addButtonToTable();
 
         backupBtn.setOnAction(e -> {
-            dao.backupKeFile("backup_bahan.ser");
-            showAlert(Alert.AlertType.INFORMATION, "Backup berhasil disimpan ke file.");
+            Task<Void> backupTask = new Task<Void>() {
+                @Override
+                protected Void call() {
+                    dao.backupKeFile("backup_bahan.ser");
+                    return null;
+                }
+
+                @Override
+                protected void succeeded() {
+                    showAlert(Alert.AlertType.INFORMATION, "Backup berhasil disimpan ke file.");
+                }
+
+                @Override
+                protected void failed() {
+                    showAlert(Alert.AlertType.ERROR, "Gagal melakukan backup.");
+                }
+            };
+            new Thread(backupTask).start();
         });
 
         restoreBtn.setOnAction(e -> {
-            List<BahanDapur> dariFile = dao.restoreDariFile("backup_bahan.ser");
-            bahanTable.setItems(FXCollections.observableArrayList(dariFile));
-            showAlert(Alert.AlertType.INFORMATION, "Data berhasil dipulihkan dari file.");
+             Task<List<BahanDapur>> restoreTask = new Task<List<BahanDapur>>() {
+                @Override
+                protected List<BahanDapur> call() {
+                    return dao.restoreDariFile("backup_bahan.ser");
+                }
+
+                @Override
+                protected void succeeded() {
+                    bahanTable.setItems(FXCollections.observableArrayList(getValue()));
+                    showAlert(Alert.AlertType.INFORMATION, "Data berhasil dipulihkan dari file.");
+                }
+
+                @Override
+                protected void failed() {
+                    showAlert(Alert.AlertType.ERROR, "Gagal memulihkan data dari file.");
+                }
+            };
+            new Thread(restoreTask).start();
         });
     }
 
@@ -88,28 +119,42 @@ public class InventoryController {
     }
 
     private void loadData() {
-        List<BahanDapur> list = dao.getSemuaBahan();
-        bahanTable.setItems(FXCollections.observableArrayList(list));
-
-        StringBuilder expiredMessages = new StringBuilder();
-        for (BahanDapur bahan : list) {
-            LocalDate expiryDate = bahan.getTanggalKadaluarsa();
-            if (expiryDate != null && expiryDate.isBefore(LocalDate.now())) {
-                expiredMessages.append("⚠️ Bahan \"")
-                        .append(bahan.getNama())
-                        .append("\" sudah kadaluarsa pada ")
-                        .append(expiryDate)
-                        .append(".\n");
+        Task<List<BahanDapur>> loadTask = new Task<List<BahanDapur>>() {
+            @Override
+            protected List<BahanDapur> call() {
+                return dao.getSemuaBahan();
             }
-        }
 
-        if (expiredMessages.length() > 0) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Peringatan Kadaluarsa");
-            alert.setHeaderText("Beberapa bahan sudah kadaluarsa:");
-            alert.setContentText(expiredMessages.toString());
-            alert.showAndWait();
-        }
+            @Override
+            protected void succeeded() {
+                List<BahanDapur> list = getValue();
+                bahanTable.setItems(FXCollections.observableArrayList(list));
+
+                StringBuilder expiredMessages = new StringBuilder();
+                for (BahanDapur bahan : list) {
+                    LocalDate expiryDate = bahan.getTanggalKadaluarsa();
+                    if (expiryDate != null && expiryDate.isBefore(LocalDate.now())) {
+                        expiredMessages.append("⚠️ Bahan \"")
+                                .append(bahan.getNama())
+                                .append("\" sudah kadaluarsa pada ")
+                                .append(expiryDate)
+                                .append(".\n");
+                    }
+                }
+
+                if (expiredMessages.length() > 0) {
+                    Platform.runLater(() -> {
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Peringatan Kadaluarsa");
+                        alert.setHeaderText("Beberapa bahan sudah kadaluarsa:");
+                        alert.setContentText(expiredMessages.toString());
+                        alert.showAndWait();
+                    });
+                }
+            }
+        };
+
+        new Thread(loadTask).start();
     }
 
     @FXML
