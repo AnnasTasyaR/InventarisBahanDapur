@@ -15,6 +15,8 @@ import javafx.stage.Stage;
 import model.BahanDapur;
 import model.Riwayat;
 import util.Session;
+import util.ExpiredCheckerUtil;
+import util.DataWrapper;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -22,6 +24,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
+import javafx.scene.media.AudioClip;
+
 
 public class InventoryController {
 
@@ -40,6 +44,7 @@ public class InventoryController {
     @FXML private Label titleLabel;
     @FXML private Button backupBtn;
     @FXML private Button restoreBtn;
+    @FXML private Button btnExpired;
 
     private final InventoryDAO dao = new InventoryDAO();
     private final RiwayatDAO riwayatDAO = new RiwayatDAO();
@@ -92,7 +97,7 @@ public class InventoryController {
         });
 
         restoreBtn.setOnAction(e -> {
-             Task<List<BahanDapur>> restoreTask = new Task<List<BahanDapur>>() {
+            Task<List<BahanDapur>> restoreTask = new Task<List<BahanDapur>>() {
                 @Override
                 protected List<BahanDapur> call() {
                     return dao.restoreDariFile("backup_bahan.ser");
@@ -144,6 +149,14 @@ public class InventoryController {
 
                 if (expiredMessages.length() > 0) {
                     Platform.runLater(() -> {
+                        try {
+                            String soundPath = getClass().getResource("assetsound/alert.wav").toString();
+                            AudioClip clip = new AudioClip(soundPath);
+                            clip.play();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
                         Alert alert = new Alert(Alert.AlertType.WARNING);
                         alert.setTitle("Peringatan Kadaluarsa");
                         alert.setHeaderText("Beberapa bahan sudah kadaluarsa:");
@@ -277,6 +290,30 @@ public class InventoryController {
         } catch (IOException e) {
             showAlert(Alert.AlertType.ERROR, "Gagal logout.");
             e.printStackTrace();
+        }
+    }
+
+    // ✅ Handler tombol "Lihat Bahan Kadaluarsa"
+    @FXML
+    private void handleExpiredClick() {
+        List<BahanDapur> semuaBahan = dao.getSemuaBahan();
+        DataWrapper<List<BahanDapur>> expiredWrapper = ExpiredCheckerUtil.getExpiredWrapper(semuaBahan);
+        List<BahanDapur> expiredList = expiredWrapper.getData();
+
+        if (expiredList.isEmpty()) {
+            showAlert(Alert.AlertType.INFORMATION, "Tidak ada bahan yang kadaluarsa.");
+        } else {
+            StringBuilder sb = new StringBuilder("Bahan kadaluarsa:\n");
+            for (BahanDapur b : expiredList) {
+                sb.append("- ").append(b.getNama())
+                  .append(" (").append(b.getTanggalKadaluarsa()).append(")\n");
+            }
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Peringatan");
+            alert.setHeaderText("Daftar bahan yang sudah kadaluarsa:");
+            alert.setContentText(sb.toString());
+            alert.showAndWait();
         }
     }
 

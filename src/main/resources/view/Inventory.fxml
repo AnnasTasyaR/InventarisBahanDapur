@@ -42,12 +42,17 @@
             </columns>
         </TableView>
 
-        <!-- 🔁 Tombol Backup dan Restore -->
+        <!-- 🔁 Tombol Backup, Restore, dan Kadaluarsa -->
         <HBox spacing="10" alignment="CENTER">
-            <Button fx:id="backupBtn" text="Backup ke File"
-                    style="-fx-background-color: #006400; -fx-text-fill: white; -fx-font-weight: bold;"/>
-            <Button fx:id="restoreBtn" text="Restore dari File"
-                    style="-fx-background-color: #8B0000; -fx-text-fill: white; -fx-font-weight: bold;"/>
+            <children>
+                <Button fx:id="backupBtn" text="Backup ke File"
+                        style="-fx-background-color: #006400; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                <Button fx:id="restoreBtn" text="Restore dari File"
+                        style="-fx-background-color: #8B0000; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                <!-- ✅ Tombol baru -->
+                <Button fx:id="btnExpired" text="Lihat Bahan Kadaluarsa" onAction="#handleExpiredClick"
+                        style="-fx-background-color: #DAA520; -fx-font-weight: bold;"/>
+            </children>
         </HBox>
 
         <!-- Form Input -->
